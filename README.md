@@ -20,6 +20,12 @@ TODO: write actual installation instructions here
 TODO: write actual usage instructions here.
 
 
+## Developing:
+While the `src` contains the source code for the OpenSCAD library, it is 100% generated code.
+
+To actually change it, look in the `../generate` folder and edit the julia source code.
+
+
 ## License and attribution requirements 
 
 ### Graphichs (from Tweemoji)
