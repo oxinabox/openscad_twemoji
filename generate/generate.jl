@@ -54,6 +54,8 @@ function lume(hex_color)
     return float(grey)
 end
 
+####################
+
 
 function filename2emoji(input_filename)
     utf16_codes_str = first(splitext(basename(input_filename)))
@@ -61,6 +63,7 @@ function filename2emoji(input_filename)
     uft16 = parse.(UInt32, utf16_codes, base=16)
     return transcode(String, uft16)
 end
+
 
 ################
 
@@ -71,10 +74,14 @@ function extract_viewbox(og_doc)
     return (xmax, ymax)
 end
 
-function declare_openscad_module(output_dir, name, (viewbox_x, viewbox_y), parts)
+function declare_openscad_for(output_dir, name, (viewbox_x, viewbox_y), parts)
     cur_scad = ""
     for (ii, hex_color) in parts
-        part_svg_filename = svg_filename(output_dir, name, ii, hex_color)
+        part_svg_filename = relpath(
+            svg_filename(output_dir, name, ii, hex_color),
+            output_dir
+        )
+
         col = lume(hex_color)
         import_line = """color("#$hex_color") import("$part_svg_filename", center=false);"""
         main_line = "linear_extrude(height=$col*v_total) {$import_line};"
@@ -93,30 +100,34 @@ function declare_openscad_module(output_dir, name, (viewbox_x, viewbox_y), parts
     end
 
     return strip("""
-        module $name (v_total, center) {
+        {
+            /* $name */
             center_def = is_undef(center) ? false : center;
-            🏳️‍⚧️ = center_def ? [$(-viewbox_x/2), $(-viewbox_y/2), 0] : [0, 0, 0]
-            translate (🏳️‍⚧️) {$cur_scad};
+            translate (center_def ? [$(-viewbox_x/2), $(-viewbox_y/2), 0] : [0, 0, 0]) {$cur_scad};
         }
-    """) * "\n\n"
+    """)
 end
 
 
-function generate(input_dir="generate/test_svgs/")
+function generate(input_dir="generate/original_svgs/")
     output_dir = mkpath(joinpath(dirname(@__DIR__), "src"))
     open(joinpath(output_dir, "twiemoji.scad"), "w") do output_scad_fh
+        println(output_scad_fh, "module twiemoji (emoji, v_total, center) {\n")
         for input_filename in readdir(input_dir, join=true)
             emoji = filename2emoji(input_filename)
             @info "Processing" input_filename emoji
-
+            println(output_scad_fh, """if (emoji == "$emoji") """)
             og_doc = read(input_filename, Node)
             viewbox = extract_viewbox(og_doc)
             parts = create_sub_svgs(output_dir, emoji, og_doc)
-            print(
+            println(
                 output_scad_fh,
-                declare_openscad_module(output_dir, emoji, viewbox, parts)
+                declare_openscad_for(output_dir, emoji, viewbox, parts)
             )
+            println(output_scad_fh, "else ")
         end
+        println(output_scad_fh, """\tassert(false, "emjoi not recognized");""")
+        println(output_scad_fh, "}")
     end
 end
 
