@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" xml:space="preserve">
+  <g fill="navy">
+    <circle cx="17.56" cy="14.659" r=".2"/>
+    <circle cx="16.71" cy="14.887" r=".2"/>
+    <circle cx="15.948" cy="15.326" r=".2"/>
+    <circle cx="15.326" cy="15.948" r=".2"/>
+    <circle cx="14.887" cy="16.71" r=".2"/>
+    <circle cx="14.659" cy="17.56" r=".2"/>
+    <circle cx="14.659" cy="18.44" r=".2"/>
+    <circle cx="14.887" cy="19.29" r=".2"/>
+    <circle cx="15.326" cy="20.052" r=".2"/>
+    <circle cx="15.948" cy="20.674" r=".2"/>
+    <circle cx="16.71" cy="21.113" r=".2"/>
+    <circle cx="17.56" cy="21.341" r=".2"/>
+    <circle cx="18.44" cy="21.341" r=".2"/>
+    <circle cx="19.29" cy="21.113" r=".2"/>
+    <circle cx="20.052" cy="20.674" r=".2"/>
+    <circle cx="20.674" cy="20.052" r=".2"/>
+    <circle cx="21.113" cy="19.29" r=".2"/>
+    <circle cx="21.341" cy="18.44" r=".2"/>
+    <circle cx="21.341" cy="17.56" r=".2"/>
+    <circle cx="21.113" cy="16.71" r=".2"/>
+    <circle cx="20.674" cy="15.948" r=".2"/>
+    <circle cx="20.052" cy="15.326" r=".2"/>
+    <circle cx="19.29" cy="14.887" r=".2"/>
+    <circle cx="18.44" cy="14.659" r=".2"/>
+    <circle cx="18" cy="18" r=".9"/>
+  </g>
+</svg>

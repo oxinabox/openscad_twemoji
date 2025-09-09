@@ -1,12 +1,23 @@
 using XML
 using ColorTypes
 using Colors
+
+#https://github.com/JuliaComputing/XML.jl/issues/50
+function Base.get(node::XML.Node, key, default)
+    if haskey(node, key)
+        node[key]
+    else
+        default
+    end
+end
+
 function split_svg(doc)
     root = doc[end]
     colored_paths = Vector{Pair{String, Vector{Node}}}()
     previous_color = ""
     for child in children(root)
-        color = lstrip(child["fill"], '#')
+        fill = get(child, "fill", "#000000")
+        color = lstrip(fill, '#')
         if color != previous_color
             push!(colored_paths, color => Vector{Node}())
         end
@@ -42,14 +53,12 @@ function create_sub_svgs(output_dir, name, og_doc)
 end
 #########
 
-function grey_hex(hex_color)
-    rgb = parse(RGB, "#"*hex_color)
-    grey = convert(Gray, rgb)
-    return "#"*hex(grey)
-end
-
 function lume(hex_color)
-    rgb = parse(RGB, "#"*hex_color)
+    rgb = if haskey(Colors.color_names, hex_color)
+        RGB(Colors.color_names["green"]./255 ...)
+    else
+        parse(RGB, "#"*hex_color)
+    end
     grey = convert(Gray, rgb)
     return float(grey)
 end
