@@ -1,6 +1,7 @@
 using XML
 using ColorTypes
 using Colors
+using ProgressMeter
 
 #https://github.com/JuliaComputing/XML.jl/issues/50
 function Base.get(node::XML.Node, key, default)
@@ -83,7 +84,7 @@ function extract_viewbox(og_doc)
     return (xmax, ymax)
 end
 
-function declare_openscad_for(output_dir, name, (viewbox_x, viewbox_y), parts)
+function declare_openscad_for(output_dir, name, og_filename, (viewbox_x, viewbox_y), parts)
     cur_scad = ""
     for (ii, hex_color) in parts
         part_svg_filename = relpath(
@@ -92,8 +93,9 @@ function declare_openscad_for(output_dir, name, (viewbox_x, viewbox_y), parts)
         )
 
         col = lume(hex_color)
-        import_line = """color("#$hex_color") import("$part_svg_filename", center=false);"""
-        main_line = "linear_extrude(height=$col*v_total) {$import_line};"
+        #dpi=25.4 makes units inside SVG match units outside, and thus makes centering work
+        import_line = """import("$part_svg_filename", center=false, dpi=25.4);"""
+        main_line = """color("#$hex_color") linear_extrude(height=$col*v_total) {$import_line};"""
         if !isempty(cur_scad)
             cur_scad = """
                 union(){difference(){
@@ -110,7 +112,7 @@ function declare_openscad_for(output_dir, name, (viewbox_x, viewbox_y), parts)
 
     return strip("""
         {
-            /* $name */
+            /* $name $og_filename*/
             center_def = is_undef(center) ? false : center;
             translate (center_def ? [$(-viewbox_x/2), $(-viewbox_y/2), 0] : [0, 0, 0]) {$cur_scad};
         }
@@ -118,20 +120,23 @@ function declare_openscad_for(output_dir, name, (viewbox_x, viewbox_y), parts)
 end
 
 
+variant(base_form) = base_form * "\UFE0F"
+
+
 function generate(input_dir="generate/original_svgs/")
     output_dir = mkpath(joinpath(dirname(@__DIR__), "src"))
     open(joinpath(output_dir, "twiemoji.scad"), "w") do output_scad_fh
-        println(output_scad_fh, "module twiemoji (emoji, v_total, center) {\n")
-        for input_filename in readdir(input_dir, join=true)
+        println(output_scad_fh, "module engrave_twiemoji (emoji, v_total, center) {\n")
+        @showprogress for input_filename in readdir(input_dir, join=true)
             emoji = filename2emoji(input_filename)
-            @info "Processing" input_filename emoji
-            println(output_scad_fh, """if (emoji == "$emoji") """)
+            #@info "Processing" input_filename emoji
+            println(output_scad_fh, """if ((emoji == "$emoji") || (emoji == "$(variant(emoji))"))""")
             og_doc = read(input_filename, Node)
             viewbox = extract_viewbox(og_doc)
             parts = create_sub_svgs(output_dir, emoji, og_doc)
             println(
                 output_scad_fh,
-                declare_openscad_for(output_dir, emoji, viewbox, parts)
+                declare_openscad_for(output_dir, emoji, basename(input_filename), viewbox, parts)
             )
             println(output_scad_fh, "else ")
         end
