@@ -56,12 +56,13 @@ end
 
 function lume(hex_color)
     rgb = if haskey(Colors.color_names, hex_color)
-        RGB(Colors.color_names["green"]./255 ...)
+        RGB(Colors.color_names[hex_color]./255 ...)
     else
         parse(RGB, "#"*hex_color)
     end
     grey = convert(Gray, rgb)
-    return float(grey)
+    min_val = 0.1
+    return min_val + float(grey)*(1-min_val)
 end
 
 ####################
@@ -95,7 +96,7 @@ function declare_openscad_for(output_dir, name, og_filename, (viewbox_x, viewbox
         col = lume(hex_color)
         #dpi=25.4 makes units inside SVG match units outside, and thus makes centering work
         import_line = """import("$part_svg_filename", center=false, dpi=25.4);"""
-        main_line = """color("#$hex_color") linear_extrude(height=$col*v_total) {$import_line};"""
+        main_line = """color("#$hex_color") translate([0,0, $(1-col)*v_total]) linear_extrude(height=$col*v_total) {$import_line};"""
         if !isempty(cur_scad)
             cur_scad = """
                 union(){difference(){
