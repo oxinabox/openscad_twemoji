@@ -13,7 +13,7 @@ This is a rather hefty thing to install at least by the standard of libraries.
 But is only a few score MB so is no problem on a modern computer, with decent internet.
 It is so large because it includes thousands of SVGs.
 
-You can install this by downloading the release,
+You can install this by [downloading the release](https://github.com/oxinabox/openscad_twemoji/archive/refs/tags/v1.0.0.zip),
 and extracting it into a [locaction OpenSCAD looks for libraries in](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Libraries).
 
 ## Usage
