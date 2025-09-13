@@ -76,10 +76,10 @@ difference(){
 };
 ```
 This is how it looks previewed in OpenSCAD
-![💂🏿,💃,🏔️,👁️, or 🖼️ engraved into them. They are shown in color. You can see the color gives different depths](demos/preview.jpg).
+![tiles with 💂🏿,💃,🏔️,👁️, or 🖼️ engraved into them. They are shown in color. You can see the color gives different depths](demos/preview.jpg).
 
 This is how it looks in my slicer:
-![💂🏿,💃,🏔️,👁️, or 🖼️ engraved into them. There is no color, but you can see the filement placing at different depths.](demos/preview_sliced.jpg).
+![tyles with 💂🏿,💃,🏔️,👁️, or 🖼️ engraved into them. There is no color, but you can see the filement placing at different depths.](demos/preview_sliced.jpg).
 
 
 ## Developing:
