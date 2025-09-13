@@ -10,14 +10,76 @@ This package supports inserting those characters with color to height mapping in
 
 ## Installing
 This is a rather hefty thing to install at least by the standard of libraries.
-But is only a few hundred MB so is no problem on a modern computer, with decent internet.
+But is only a few score MB so is no problem on a modern computer, with decent internet.
 It is so large because it includes thousands of SVGs.
 
-TODO: write actual installation instructions here
+You can install this by downloading the release,
+and extracting it into a [locaction OpenSCAD looks for libraries in](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Libraries).
 
 ## Usage
 
-TODO: write actual usage instructions here.
+Note: it is important this you load this via `use` not `include` as the library references paths relative to itself (if you use `include` then it would try and find them relative to your file).
+```
+use <open_scad_twimoji/src/twiemoji.scad>
+```
+
+There is at present 1 function.
+`engrave_twiemoji` which should be used in partnership with `difference`.
+This produces a colored 3D image of the emoji with each color matched to a different depth.
+It takes 3 argnments
+
+ - The emoji: _(required)_ pass this as a string. Make sure not to include any whitepace. This does incude every emoji in Unicode 14, but if you use some unicode character we do not recognise then you will get an error.
+ - Depth/height: _(required)_ how deep to engrave the image
+ - center: _(optional, default false)_ if true the anchor should be at the center of the XY plane, if false it is at bottom left
+
+
+## Example
+the following makes 6 tiles with 💂🏿,💃,🏔️,👁️, or 🖼️ engraved into it.
+```openscad
+use <open_scad_twimoji/src/twiemoji.scad>
+
+
+difference(){
+    translate([0,0,-1])
+    cube([40,40, 2], center=true);
+    engrave_twiemoji("💂🏿", 2, center=true);
+};
+translate([0,50,0])
+difference(){
+    translate([0,0,-1])
+    cube([40,40, 2], center=true);
+    engrave_twiemoji("💃", 2, center=true);
+};
+translate([0,100,0])
+difference(){
+    translate([0,0,-1])
+    cube([40,40, 2], center=true);
+    engrave_twiemoji("🏔️", 2, center=true);
+};
+translate([50,0,0])
+difference(){
+    translate([0,0,-1])
+    cube([40,40, 2], center=true);
+    engrave_twiemoji("🎁", 2, center=true);
+};
+translate([50,50,0])
+difference(){
+    translate([0,0,-1])
+    cube([40,40, 2], center=true);
+    engrave_twiemoji("👁️", 2, center=true);
+};
+translate([50,100,0])
+difference(){
+    translate([0,0,-1])
+    cube([40,40, 2], center=true);
+    engrave_twiemoji("🖼️", 2, center=true);
+};
+```
+This is how it looks previewed in OpenSCAD
+![💂🏿,💃,🏔️,👁️, or 🖼️ engraved into them. They are shown in color. You can see the color gives different depths](demos/preview.jpg).
+
+This is how it looks in my slicer:
+![💂🏿,💃,🏔️,👁️, or 🖼️ engraved into them. There is no color, but you can see the filement placing at different depths.](demos/preview_sliced.jpg).
 
 
 ## Developing:
@@ -25,6 +87,8 @@ While the `src` contains the source code for the OpenSCAD library, it is 100% ge
 
 To actually change it, look in the `../generate` folder and edit the julia source code.
 
+The actuals source is pretty general and could probably be used for any SVGs really.
+As long as they just use fills and not strokes (or complicated things like embeddd PNGs or animations etc).
 
 ## License and attribution requirements 
 
@@ -41,9 +105,4 @@ However, we consider the guide a bit onerous and as a project, will accept a men
 
 Code licensed under the MIT License: <http://opensource.org/licenses/MIT>
 Copyright 2025, Frames Catherine White and [and other contributors](https://github.com/oxinabox/openscad_twemoji/graphs/contributors)
-
-
-
-
-
 

@@ -96,12 +96,13 @@ function declare_openscad_for(output_dir, name, og_filename, (viewbox_x, viewbox
         col = lume(hex_color)
         #dpi=25.4 makes units inside SVG match units outside, and thus makes centering work
         import_line = """import("$part_svg_filename", center=false, dpi=25.4);"""
-        main_line = """color("#$hex_color") translate([0,0, $(1-col)*v_total]) linear_extrude(height=$col*v_total) {$import_line};"""
+        extrude_line(h) = "linear_extrude(height=$h*v_total) {$import_line}"
+        main_line = """color("#$hex_color") translate([0,0, $(1-col)*v_total]) $(extrude_line(col));"""
         if !isempty(cur_scad)
             cur_scad = """
                 union(){difference(){
                     $cur_scad
-                    $main_line
+                    $(extrude_line(1))
                 };
                 $main_line
             };
@@ -115,7 +116,8 @@ function declare_openscad_for(output_dir, name, og_filename, (viewbox_x, viewbox
         {
             /* $name $og_filename*/
             center_def = is_undef(center) ? false : center;
-            translate (center_def ? [$(-viewbox_x/2), $(-viewbox_y/2), 0] : [0, 0, 0]) {$cur_scad};
+            pos = center_def ? [$(-viewbox_x/2), $(-viewbox_y/2), -0.99*v_total] : [0, 0, -0.99*v_total];
+            translate (pos) {$cur_scad};
         }
     """)
 end
