@@ -36,7 +36,7 @@ It takes 3 argnments
 ## Example
 the following makes 6 tiles with 💂🏿,💃,🏔️,👁️, or 🖼️ engraved into it.
 ```openscad
-use <open_scad_twimoji/src/twiemoji.scad>
+use <openscad_twemoji/src/twiemoji.scad>
 
 
 difference(){
