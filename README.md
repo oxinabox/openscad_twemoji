@@ -20,7 +20,7 @@ and extracting it into a [locaction OpenSCAD looks for libraries in](https://en.
 
 Note: it is important this you load this via `use` not `include` as the library references paths relative to itself (if you use `include` then it would try and find them relative to your file).
 ```
-use <open_scad_twimoji/src/twiemoji.scad>
+use <openscad_twemoji/src/twiemoji.scad>
 ```
 
 There is at present 1 function.
